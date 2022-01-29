@@ -1,0 +1,17 @@
+﻿@page
+@model SITConnect.Pages.TwoFactorAuthenticationControllerModel
+@{
+}
+<html>
+<body>
+    <h1> Please Enable two-factor authentication before login</h1>
+    <div> <label class="text-danger">@Model.MyMessage</label> </div>
+    <form method="post">
+        <img src="@Model.BarcodeImageUrl" /><br />
+        Setup code: @Model.SetupCode<br />
+        Input security code: <input asp-for="Code" /><br />
+        <input asp-for="getemail" value="@Model.Myemail"  hidden/><br />
+        <input type="submit" />
+    </form>
+</body>
+</html>

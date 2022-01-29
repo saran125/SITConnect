@@ -1,0 +1,143 @@
+﻿@page
+@model SITConnect.Pages.registerModel
+@using AspNetCore.ReCaptcha
+<html>
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: black;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Add padding to containers */
+        .container {
+            padding: 16px;
+            background-color: white;
+        }
+
+        /* Full-width input fields */
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            display: inline-block;
+            border: none;
+            background: #f1f1f1;
+        }
+
+            input[type=text]:focus, input[type=password]:focus {
+                background-color: #ddd;
+                outline: none;
+            }
+
+        /* Overwrite default styles of hr */
+        hr {
+            border: 1px solid #f1f1f1;
+            margin-bottom: 25px;
+        }
+
+        /* Set a style for the submit button */
+        .registerbtn {
+            background-color: #04AA6D;
+            color: white;
+            padding: 16px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            opacity: 0.9;
+        }
+
+            .registerbtn:hover {
+                opacity: 1;
+            }
+
+        /* Add a blue text color to links */
+        a {
+            color: dodgerblue;
+        }
+
+        /* Set a grey background color and center the text of the "sign in" section */
+        .signin {
+            background-color: #f1f1f1;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <form method="post">
+        <div class="container">
+            <h1>Register</h1>
+            <p>Please fill in this form to create an account.</p>
+            <hr>
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div> <label class="text-danger">@Model.MyMessage</label> </div>
+            <label for="email"><b>Email</b></label>
+            <span asp-validation-for="thuser.Email" class="text-danger"></span>
+            <input type="email" asp-for="thuser.Email" placeholder="Enter Email" required>
+
+            <label for="psw"><b>Password</b></label>
+            <span asp-validation-for="thuser.Password" class="text-danger"></span>
+            <input type="password" placeholder="Enter Password" asp-for="thuser.Password" id="psw" required>
+
+            <label for="psw-repeat"><b>Repeat Password</b></label>
+            <span asp-validation-for="Cfmpwd" class="text-danger"></span>
+            <input type="password" placeholder="Repeat Password" asp-for="Cfmpwd" id="psw-repeat" required>
+
+            <label for="psw-repeat"><b>First Name</b></label>
+            <span asp-validation-for="thuser.Fname" class="text-danger"></span>
+            <input type="text" placeholder="First Name" asp-for="thuser.Fname" id="psw-repeat" required>
+
+            <label for="psw-repeat"><b>Last Name</b></label>
+            <span asp-validation-for="thuser.Lname" class="text-danger"></span>
+            <input type="text" placeholder="Last Name" asp-for="thuser.Lname" id="psw-repeat" required>
+
+            <label for="psw-repeat"><b>Birth Date</b></label>
+            <span asp-validation-for="thuser.BirthDate" class="text-danger"></span>
+            <input type="date" placeholder="" asp-for="thuser.BirthDate" id="psw-repeat" required>
+
+            <label for="psw-repeat"><b>Credit Card Number</b></label>
+            <span asp-validation-for="thuser.Card_number" class="text-danger"></span>
+            <input type="number" placeholder="Credit Card Number" asp-for="thuser.Card_number" id="psw-repeat" required>
+
+            <label for="psw-repeat"><b>Card Expiry Date</b></label>
+            <span asp-validation-for="thuser.Expiry_date" class="text-danger"></span>
+            <input type="date" placeholder="" asp-for="thuser.Expiry_date" required>
+
+            <label for="psw-repeat"><b>CVV</b></label>
+            <span asp-validation-for="thuser.CVV" class="text-danger"></span>
+            <input type="number" placeholder="CVV Number" asp-for="thuser.CVV" id="psw-repeat" required>
+
+            <label for="psw-repeat"><b>Profile Photo</b></label>
+            <span asp-validation-for="thuser.Photo" class="text-danger"></span>
+            <input type="file" placeholder="" asp-for="thuser.Photo" id="psw-repeat" required>
+            <label for="psw-repeat"><b>Role</b></label>
+            <span asp-validation-for="thuser.Role" class="text-danger"></span>
+            <select class="form-control" asp-for="thuser.Role">
+                <option class="hidden" selected disabled>--Select Role--</option>
+                <option value="Student">Student</option>
+                <option value="Staff">Staff</option>
+            </select>
+            <hr>
+            @Html.ReCaptcha()
+            <button type="submit" class="registerbtn">Register</button>
+        </div>
+
+        <div class="container signin">
+            <p>Already have an account? <a href="#">Sign in</a>.</p>
+        </div>
+    </form>
+
+</body>
+</html>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

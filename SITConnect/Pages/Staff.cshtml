@@ -1,0 +1,20 @@
+﻿@page
+@model SITConnect.Pages.StaffModel
+@{
+}
+
+<h1>Hello staff!</h1>
+<style>
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<h1>Hello Student!</h1>
+<p>First Name: @Model.user.Fname</p>
+<p>Last Name: @Model.user.Lname</p>
+<p>Encrypted Credit Card: @Model.user.Card_number</p>
+
+<p>Birth Date: @Model.user.BirthDate</p>
+<img src="~/Upload_image/@Model.user.Photo" style="width:60%;" />

@@ -1,0 +1,14 @@
+﻿@page
+@model SITConnect.Pages.TwoFactorModel
+@{
+}
+<html>
+<body>
+    <h1>Two-factor authentication</h1>
+    <form method="post">
+        Input security code: <input  asp-for="Code"/><br />
+        <input asp-for="getemail" value="@Model.Myemail" hidden /><br />
+        <input type="submit" />
+    </form>
+</body>
+</html>
