@@ -25,7 +25,7 @@ namespace SITConnect.Pages
         }
 
         [BindProperty]
-        public User thuser { get; set; }
+        public User theuser { get; set; }
         [BindProperty]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$",
            ErrorMessage = "Password Need to be at least 12 characters, combination of lower case, upper case, numbers & special characters")]
@@ -36,18 +36,20 @@ namespace SITConnect.Pages
         public void OnGet()
         {
         }
+
         [ValidateReCaptcha]
         public IActionResult OnPost()
         {
+
             if (ModelState.IsValid)
             {
                
-                if (Cfmpwd == thuser.Password)
+                if (Cfmpwd == theuser.Password)
                 {
 
-                    if (_svc.Register(thuser))
+                    if (_svc.Register(theuser))
                     {
-                        return Redirect("/TwoFactorAuthenticationController?Email=" + thuser.Email);
+                        return Redirect("/TwoFactorAuthenticationController?Id=" + theuser.Id);
                     }
                     else
                     {

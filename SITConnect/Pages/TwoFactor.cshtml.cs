@@ -27,36 +27,64 @@ namespace SITConnect.Pages
         [BindProperty]
         public string Code { get; set; }
         [BindProperty]
-        public string Myemail { get; set; }
+        public string Myid { get; set; }
         [BindProperty]
-        public string getemail { get; set; }
+        public string Mymessage { get; set; }
+        [BindProperty]
+        public string getid { get; set; }
         private static string TwoFactorKey(User user)
         {
             return $"myverysecretkey+{user.Email}";
         }
-        public void OnGet(string Email)
+        public IActionResult OnGet()
+
         {
-            Myemail = Email;
+            if (String.IsNullOrEmpty(HttpContext.Session.GetString("Id")))
+            {
+                return Redirect("/403");
+            }
+            else
+            Myid = HttpContext.Session.GetString("Id");
+            return Page();
         }
         public User theuser { get; set; }
         public IActionResult OnPost()
         {
-            User currentuser = _svc.GetUserByEmail(getemail);
+            User currentuser = _svc.GetUserById(getid);
             TwoFactorAuthenticator twoFactor = new TwoFactorAuthenticator();
             bool isValid = twoFactor.ValidateTwoFactorPIN(TwoFactorKey(currentuser), Code);
             if (isValid)
             {
-      
+                string guid = Guid.NewGuid().ToString();
+                HttpContext.Session.SetString("AuthToken", guid);
+                CookieOptions option = new CookieOptions();
+                option.Expires = DateTime.Now.AddMinutes(10);
+                Response.Cookies.Append("AuthToken", guid, option);
                 HttpContext.Session.SetString("Email", currentuser.Email);
-                HttpContext.Session.SetString("Fname", currentuser.Fname);
-                HttpContext.Session.SetString("Lname", currentuser.Lname);
-                HttpContext.Session.SetString("Role", currentuser.Role);
-                if(currentuser.Role == "Student")
-                { return RedirectToPage("/Student"); }
-                else if (currentuser.Role == "Staff")
+                
+                if (_svc.Max_password(currentuser.Email))
                 {
-                    { return RedirectToPage("/Staff"); }
+                    HttpContext.Session.SetString("Role", currentuser.Role);
+                    if (currentuser.Role == "Student")
+                    { return RedirectToPage("/Student"); }
+                    else if (currentuser.Role == "Staff")
+                    {
+                        { return RedirectToPage("/Staff"); }
+                    }
                 }
+                else
+                {
+                    
+                    return Redirect("/Reset_Password?Id=" + currentuser.Id);
+                }
+
+                }
+            else
+            {
+                var setupInfo = twoFactor.GenerateSetupCode("SITConnect", user.Email, TwoFactorKey(user), false, 3);
+                Mymessage = "Invalid Code";
+                Myid = user.Id;
+                return Page();
             }
             return Page();
         }

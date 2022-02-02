@@ -2,7 +2,7 @@
 @model SITConnect.Pages._403Model
 @{
 }
-
+@using Microsoft.AspNetCore.Http;
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +17,11 @@
 </head>
 <body>
     <img src="~/Upload_image/403 Error Forbidden-cuate.png" alt="Paris" style="width:60%;">
-    <h1> Please Login to access the page</h1>
-    <button><a asp-page="/login">Login here</a></button>
+    @{ if (String.IsNullOrEmpty(HttpContext.Session.GetString("Email")))
+        {
+            <h1> Please Login to access the page</h1>
+            <button><a asp-page="/login">Login here</a></button>
+        }
+    }
 </body>
 </html>

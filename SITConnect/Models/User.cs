@@ -17,10 +17,9 @@ namespace SITConnect.Models
         public string Fname { get; set; }
         
         public string Lname { get; set; }
-        [Required]
+       
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "It is not a valid email address")]
         public string Email { get; set; }
-        [Required]
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$",
             ErrorMessage = "Password Need to be at least 12 characters, combination of lower case, upper case, numbers & special characters")]
         public string Password { get; set; }
@@ -29,6 +28,7 @@ namespace SITConnect.Models
         [DataType(DataType.Date)]
         public DateTime Expiry_date { get; set; }
         public byte[] Key { get; set; }
+        public byte[] IV { get; set; }
 
         public string Role { get; set; }
 

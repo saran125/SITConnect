@@ -6,8 +6,9 @@
 <body>
     <h1>Two-factor authentication</h1>
     <form method="post">
-        Input security code: <input  asp-for="Code"/><br />
-        <input asp-for="getemail" value="@Model.Myemail" hidden /><br />
+        <div> <label class="text-danger">@Model.Mymessage</label> </div>
+        Input security code: <input asp-for="Code" /><br />
+        <input asp-for="getid" value="@Model.Myid" hidden /><br />
         <input type="submit" />
     </form>
 </body>

@@ -31,7 +31,7 @@ namespace SITConnect.Pages
 
             {
                 user = _svc.GetUserByEmail(HttpContext.Session.GetString("Email"));
-                decrypt = _svc.Decrypt(user.Key);
+                decrypt = _svc.Decrypt(user.Card_number, user.Key, user.IV);
                 HttpContext.Session.GetString("Email");
                 return Page();
             }

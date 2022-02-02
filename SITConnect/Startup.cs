@@ -1,6 +1,8 @@
 using AspNetCore.ReCaptcha;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -29,7 +31,20 @@ namespace SITConnect
         {
             services.AddRazorPages();
             services.AddDbContext<SITConnectDBcontext>();
-            services.AddSession();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(2);
+                options.Cookie.HttpOnly = true;
+            });
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(2);
+                    options.SlidingExpiration = true;
+                    options.AccessDeniedPath = "/403";
+                    options.LoginPath = "/login";
+                    options.LogoutPath = "/logout";
+                });
             services.AddTransient<UserService>();
             services.AddReCaptcha(Configuration.GetSection("ReCaptcha"));
 
@@ -49,6 +64,7 @@ namespace SITConnect
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseSession();
             app.Use(async (context, next) =>
             {
                 await next();
@@ -57,13 +73,18 @@ namespace SITConnect
                     context.Request.Path = "/404";
                     await next();
                 }
+                if(
+                String.IsNullOrEmpty(context.Session.GetString("AuthToken")
+                )){
+                    context.Request.Path = "/login";
+                    await next();
+                }
             });
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseCookiePolicy();
             app.UseRouting();
-            app.UseSession();
+          
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

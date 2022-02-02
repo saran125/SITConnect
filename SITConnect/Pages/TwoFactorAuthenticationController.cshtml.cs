@@ -34,18 +34,18 @@ namespace SITConnect.Pages
         [BindProperty]
         public string MyMessage { get; set; }
         [BindProperty]
-        public string Myemail { get; set; }
+        public string MyId { get; set; }
         [BindProperty]
-        public string getemail { get; set; }
-        public IActionResult OnGet(string Email)
-        { if (Email == null)
+        public string getid { get; set; }
+        public IActionResult OnGet(string Id)
+        { if (Id == null)
             {
-                return NotFound();
+                return Redirect("/404");
             }
             else
             {
-                Myemail = Email;
-                User currentuser = _svc.GetUserByEmail(Email);
+                MyId = Id;
+                User currentuser = _svc.GetUserById(Id);
                 TwoFactorAuthenticator twoFactor = new TwoFactorAuthenticator();
                 var setupInfo = twoFactor.GenerateSetupCode("SITConnect", currentuser.Email, TwoFactorKey(currentuser), false, 3);
                 SetupCode = setupInfo.ManualEntryKey;
@@ -59,14 +59,23 @@ namespace SITConnect.Pages
         }
         public IActionResult OnPost()
         {
-            User user = _svc.GetUserByEmail(getemail);
+            User user = _svc.GetUserById(getid);
             TwoFactorAuthenticator twoFactor = new TwoFactorAuthenticator();
             bool isValid = twoFactor.ValidateTwoFactorPIN(TwoFactorKey(user), Code);
             if (isValid)
             {
-                if (_svc.Enable_twofactor(getemail))
+                if (_svc.Enable_twofactor(user.Email))
                 {
                     return Redirect("/login");
+                }
+                else
+                {
+                    var setupInfo = twoFactor.GenerateSetupCode("SITConnect", user.Email, TwoFactorKey(user), false, 3);
+                    SetupCode = setupInfo.ManualEntryKey;
+                    BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
+                    MyMessage = "Invalid Code";
+                    MyId = user.Id;
+                    return Page();
                 }
             }
             else
@@ -75,9 +84,9 @@ namespace SITConnect.Pages
                 SetupCode = setupInfo.ManualEntryKey;
                 BarcodeImageUrl = setupInfo.QrCodeSetupImageUrl;
                 MyMessage = "Invalid Code";
+                MyId = user.Id;
                 return Page();
             }
-            return Page();
         }
     }
 }

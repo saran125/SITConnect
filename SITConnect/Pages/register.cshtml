@@ -80,47 +80,44 @@
             <div asp-validation-summary="All" class="text-danger"></div>
             <div> <label class="text-danger">@Model.MyMessage</label> </div>
             <label for="email"><b>Email</b></label>
-            <span asp-validation-for="thuser.Email" class="text-danger"></span>
-            <input type="email" asp-for="thuser.Email" placeholder="Enter Email" required>
-
+            <span asp-validation-for="theuser.Email" class="text-danger"></span>
+            <input type="email" asp-for="theuser.Email" placeholder="Enter Email" required>
             <label for="psw"><b>Password</b></label>
-            <span asp-validation-for="thuser.Password" class="text-danger"></span>
-            <input type="password" placeholder="Enter Password" asp-for="thuser.Password" id="psw" required>
-
+            <span asp-validation-for="theuser.Password" class="text-danger"></span>
+            <input type="password" min="12" placeholder="Enter Password" asp-for="theuser.Password" id="psw" required>
             <label for="psw-repeat"><b>Repeat Password</b></label>
             <span asp-validation-for="Cfmpwd" class="text-danger"></span>
             <input type="password" placeholder="Repeat Password" asp-for="Cfmpwd" id="psw-repeat" required>
-
             <label for="psw-repeat"><b>First Name</b></label>
-            <span asp-validation-for="thuser.Fname" class="text-danger"></span>
-            <input type="text" placeholder="First Name" asp-for="thuser.Fname" id="psw-repeat" required>
+            <span asp-validation-for="theuser.Fname" class="text-danger"></span>
+            <input type="text" placeholder="First Name" asp-for="theuser.Fname" id="psw-repeat" required>
 
             <label for="psw-repeat"><b>Last Name</b></label>
-            <span asp-validation-for="thuser.Lname" class="text-danger"></span>
-            <input type="text" placeholder="Last Name" asp-for="thuser.Lname" id="psw-repeat" required>
+            <span asp-validation-for="theuser.Lname" class="text-danger"></span>
+            <input type="text" placeholder="Last Name" asp-for="theuser.Lname" id="psw-repeat" required>
 
             <label for="psw-repeat"><b>Birth Date</b></label>
-            <span asp-validation-for="thuser.BirthDate" class="text-danger"></span>
-            <input type="date" placeholder="" asp-for="thuser.BirthDate" id="psw-repeat" required>
+            <span asp-validation-for="theuser.BirthDate" class="text-danger"></span>
+            <input type="date" placeholder="" asp-for="theuser.BirthDate" id="psw-repeat" required>
 
             <label for="psw-repeat"><b>Credit Card Number</b></label>
-            <span asp-validation-for="thuser.Card_number" class="text-danger"></span>
-            <input type="number" placeholder="Credit Card Number" asp-for="thuser.Card_number" id="psw-repeat" required>
+            <span asp-validation-for="theuser.Card_number" class="text-danger"></span>
+            <input type="number" placeholder="Credit Card Number" asp-for="theuser.Card_number" id="psw-repeat" required>
 
             <label for="psw-repeat"><b>Card Expiry Date</b></label>
-            <span asp-validation-for="thuser.Expiry_date" class="text-danger"></span>
-            <input type="date" placeholder="" asp-for="thuser.Expiry_date" required>
+            <span asp-validation-for="theuser.Expiry_date" class="text-danger"></span>
+            <input type="date" placeholder="" asp-for="theuser.Expiry_date" required>
 
             <label for="psw-repeat"><b>CVV</b></label>
-            <span asp-validation-for="thuser.CVV" class="text-danger"></span>
-            <input type="number" placeholder="CVV Number" asp-for="thuser.CVV" id="psw-repeat" required>
+            <span asp-validation-for="theuser.CVV" class="text-danger"></span>
+            <input type="number" placeholder="CVV Number" asp-for="theuser.CVV" id="psw-repeat" required>
 
             <label for="psw-repeat"><b>Profile Photo</b></label>
-            <span asp-validation-for="thuser.Photo" class="text-danger"></span>
-            <input type="file" placeholder="" asp-for="thuser.Photo" id="psw-repeat" required>
+            <span asp-validation-for="theuser.Photo" class="text-danger"></span>
+            <input type="file" placeholder="" asp-for="theuser.Photo" id="psw-repeat" required>
             <label for="psw-repeat"><b>Role</b></label>
-            <span asp-validation-for="thuser.Role" class="text-danger"></span>
-            <select class="form-control" asp-for="thuser.Role">
+            <span asp-validation-for="theuser.Role" class="text-danger"></span>
+            <select class="form-control" asp-for="theuser.Role">
                 <option class="hidden" selected disabled>--Select Role--</option>
                 <option value="Student">Student</option>
                 <option value="Staff">Staff</option>

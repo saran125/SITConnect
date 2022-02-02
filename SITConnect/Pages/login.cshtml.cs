@@ -23,41 +23,39 @@ namespace SITConnect.Pages
         [BindProperty]
         public string MyMessage { get; set; }
         [BindProperty]
-        public User thuser { get; set; }
+        public User theuser { get; set; }
         public void OnGet()
         {
         }
-
         public IActionResult OnPost()
         {
             if (ModelState.IsValid)
             {
-                if (_svc.Lockout(thuser.Email))
+                if (_svc.Lockout(theuser.Email))
                 {
-                    if (_svc.Login(thuser))
-                    {
-                        if (_svc.Twofactor(thuser.Email))
+                    
+
+                        if (_svc.Login(theuser))
                         {
-                            return Redirect("/TwoFactor?Email=" + thuser.Email);
-                        }
+                        User login_user = _svc.GetUserByEmail(theuser.Email);
+                       
+                            if (_svc.Twofactor(theuser.Email))
+                            {
+                 
+                            HttpContext.Session.SetString("Id", login_user.Id);
+                            return Redirect("/TwoFactor?Id=" + login_user.Id);
+                            }
+                            else
+                            {
+                                return Redirect("/TwoFactorAuthenticationController?Id=" + login_user.Id);
+                            } 
+                    }
                         else
                         {
-                            return Redirect("/TwoFactorAuthenticationController?Email=" + thuser.Email);
+                            MyMessage = "Invalid Email or Password";
+                            return Page();
                         }
-
-                        User currentuser = _svc.Theuser(thuser);
-                        HttpContext.Session.SetString("Email", currentuser.Email);
-                        HttpContext.Session.SetString("Fname", currentuser.Fname);
-                        HttpContext.Session.SetString("Lname", currentuser.Lname);
-                        HttpContext.Session.SetString("Role", currentuser.Role);
-                        return RedirectToPage("/Index");
-
-                    }
-                    else
-                    {
-                        MyMessage = "Invalid Email or Password";
-                        return Page();
-                    }
+                    
                 }
                 else
                 {

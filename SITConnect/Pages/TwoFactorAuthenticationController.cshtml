@@ -4,13 +4,14 @@
 }
 <html>
 <body>
-    <h1> Please Enable two-factor authentication before login</h1>
+    <h1> Please Enable two-factor authentication before login using google authenticator</h1>
+    <h2> Click <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en_SG&gl=US">here </a> to download the app!</h2>
     <div> <label class="text-danger">@Model.MyMessage</label> </div>
     <form method="post">
         <img src="@Model.BarcodeImageUrl" /><br />
         Setup code: @Model.SetupCode<br />
         Input security code: <input asp-for="Code" /><br />
-        <input asp-for="getemail" value="@Model.Myemail"  hidden/><br />
+        <input asp-for="getid" value="@Model.MyId"  hidden/><br />
         <input type="submit" />
     </form>
 </body>
