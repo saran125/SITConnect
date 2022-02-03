@@ -20,7 +20,8 @@ namespace SITConnect.Models
        
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "It is not a valid email address")]
         public string Email { get; set; }
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$",
+
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
             ErrorMessage = "Password Need to be at least 12 characters, combination of lower case, upper case, numbers & special characters")]
         public string Password { get; set; }
         public string Card_number { get; set; }
