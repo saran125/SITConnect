@@ -9,11 +9,6 @@ namespace SITConnect.Repository
 {
     public class AuditRepository
     {
-        private readonly IConfiguration _configuration;
-        public AuditRepository(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
         private SITConnectDBcontext _context;
         public AuditRepository(SITConnectDBcontext context)
         {
@@ -25,6 +20,7 @@ namespace SITConnect.Repository
         {
             try
             {
+                objauditmodel.Id = Guid.NewGuid().ToString();
                 _context.Add(objauditmodel);
                 _context.SaveChanges();
 

@@ -12,7 +12,6 @@ namespace SITConnect.Models
 
         public string Id { get; set; }
         public string Action { get; set; }
-        public string ControllerName { get; set; }
         public string ActionName { get; set; }
         public string Role { get; set; }
         public string IpAddress { get; set; }
@@ -21,8 +20,9 @@ namespace SITConnect.Models
         public string LoginStatus { get; set; }
         public string PageAccessed { get; set; }
         public string SessionId { get; set; }
-
         public string UserId { get; set; }
+        public string Time { get; set; }
+
     }
 
 }

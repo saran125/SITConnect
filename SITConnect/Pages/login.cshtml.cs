@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SITConnect.Models;
+using SITConnect.Repository;
 using SITConnect.Services;
 
 namespace SITConnect.Pages
@@ -16,16 +17,34 @@ namespace SITConnect.Pages
     {
         private readonly ILogger<loginModel> _logger;
         private UserService _svc;
-        public loginModel(ILogger<loginModel> logger, UserService service)
+        private AuditRepository _auditRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public loginModel(ILogger<loginModel> logger, UserService service,IHttpContextAccessor httpContextAccessor, AuditRepository repository)
         {
             _logger = logger;
             _svc = service;
+            _auditRepository = repository;
+            _httpContextAccessor = httpContextAccessor;
+
         }
+
         [BindProperty]
         public string MyMessage { get; set; }
         [BindProperty]
         public User theuser { get; set; }
-        
+        private void Audit(string Id)
+        {
+            var objaudit = new AuditModel();
+            objaudit.ActionName = "Login";
+            objaudit.Action = "Unable to login. Account is locked";
+            objaudit.Time = DateTime.Now.ToString();
+            objaudit.LoginStatus = "N";
+            objaudit.IpAddress = Convert.ToString(_httpContextAccessor.HttpContext.Connection.RemoteIpAddress);
+            objaudit.UserId = Id;
+            objaudit.PageAccessed = "Login";
+            objaudit.SessionId = HttpContext.Session.Id;
+            _auditRepository.InsertAuditLogs(objaudit);
+        }
         public void OnGet()
         {
         }
@@ -61,6 +80,8 @@ namespace SITConnect.Pages
                 }
                 else
                 {
+                    User user = _svc.GetUserByEmail(theuser.Email);
+                    Audit(user.Id);
                     MyMessage = "Account is locked!";
                     return Page();
                 }

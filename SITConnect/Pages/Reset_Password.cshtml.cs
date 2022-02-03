@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SITConnect.Models;
+using SITConnect.Repository;
 using SITConnect.Services;
 
 namespace SITConnect.Pages
@@ -16,10 +17,14 @@ namespace SITConnect.Pages
     {
         private readonly ILogger<Reset_PasswordModel> _logger;
         private UserService _svc;
-        public Reset_PasswordModel(ILogger<Reset_PasswordModel> logger, UserService service)
+        private AuditRepository _auditRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public Reset_PasswordModel(ILogger<Reset_PasswordModel> logger, UserService service, IHttpContextAccessor httpContextAccessor, AuditRepository repository)
         {
             _logger = logger;
             _svc = service;
+            _auditRepository = repository;
+            _httpContextAccessor = httpContextAccessor;
 
         }
 
@@ -34,6 +39,20 @@ namespace SITConnect.Pages
            ErrorMessage = "Password Need to be at least 12 characters, combination of lower case, upper case, numbers & special characters")]
         [BindProperty]
         public string Currentpwd { get; set; }
+        private void Audit()
+        {
+            var objaudit = new AuditModel();
+            objaudit.ActionName = "Password";
+            objaudit.Action = "Successfully changed password";
+            objaudit.Role = HttpContext.Session.GetString("Role");
+            objaudit.Time = DateTime.Now.ToString();
+            objaudit.LoginStatus = "Y";
+            objaudit.IpAddress = Convert.ToString(_httpContextAccessor.HttpContext.Connection.RemoteIpAddress);
+            objaudit.UserId = HttpContext.Session.GetString("Id"); 
+            objaudit.PageAccessed = "Reset Password";
+            objaudit.SessionId = HttpContext.Session.GetString("AuthToken");
+            _auditRepository.InsertAuditLogs(objaudit);
+        }
         public IActionResult OnGet()
         {
             if (!String.IsNullOrEmpty(HttpContext.Session.GetString("AuthToken")) && Request.Cookies["AuthToken"] != null)
@@ -62,6 +81,7 @@ namespace SITConnect.Pages
 
                     if (_svc.reset_password(user))
                     {
+                        Audit();
                         return Redirect("/logout");
                     }
                     else

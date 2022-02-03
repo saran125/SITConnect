@@ -18,15 +18,16 @@ namespace SITConnect.Pages
     {
         private readonly ILogger<TwoFactorModel> _logger;
         private UserService _svc;
-       
-       
+        
+
         public TwoFactorModel(ILogger<TwoFactorModel> logger, UserService service)
         {
             _logger = logger;
             _svc = service;
-      
+        
 
-    }
+
+        }
         [BindProperty]
         public User user { get; set; }
         [BindProperty]
@@ -53,6 +54,7 @@ namespace SITConnect.Pages
             Myid = HttpContext.Session.GetString("Id");
             return Page();
         }
+       
         public User theuser { get; set; }
         public IActionResult OnPost()
         {

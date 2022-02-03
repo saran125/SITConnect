@@ -50,8 +50,8 @@ namespace SITConnect
                     options.LogoutPath = "/logout";
                 });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            
             services.AddTransient<UserService>();
+            services.AddTransient<AuditRepository>();
             services.AddReCaptcha(Configuration.GetSection("ReCaptcha"));
            
         }
