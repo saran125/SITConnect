@@ -37,7 +37,7 @@ namespace SITConnect.Pages
             }
             else
             {
-                return Redirect("/403");
+                return Redirect("/forbidden");
             }
         }
 }

@@ -69,9 +69,10 @@
             text-align: center;
         }
     </style>
+    <script src="~/js/register.js"></script>
 </head>
 <body>
-
+    
     <form method="post">
         <div class="container">
             <h1>Register</h1>
@@ -84,10 +85,14 @@
             <input type="email" asp-for="theuser.Email" placeholder="Enter Email" required>
             <label for="psw"><b>Password</b></label>
             <span asp-validation-for="theuser.Password" class="text-danger"></span>
-            <input type="password" min="12" placeholder="Enter Password" asp-for="theuser.Password" id="psw" required>
+            <br />
+            <span id="pwd_validate"></span>
+            <input type="password" min="12" placeholder="Enter Password" asp-for="theuser.Password" onkeyup="javascript:validate()" id="psw" required>
             <label for="psw-repeat"><b>Repeat Password</b></label>
             <span asp-validation-for="Cfmpwd" class="text-danger"></span>
-            <input type="password" placeholder="Repeat Password" asp-for="Cfmpwd" id="psw-repeat" required>
+            <br />
+            <span id="pwd_validate1"></span>
+            <input type="password" placeholder="Repeat Password" asp-for="Cfmpwd"  onkeyup="javascript:validate1()" id="psw1" required>
             <label for="psw-repeat"><b>First Name</b></label>
             <span asp-validation-for="theuser.Fname" class="text-danger"></span>
             <input type="text" placeholder="First Name" asp-for="theuser.Fname" id="psw-repeat" required>
@@ -102,8 +107,7 @@
 
             <label for="psw-repeat"><b>Credit Card Number</b></label>
             <span asp-validation-for="theuser.Card_number" class="text-danger"></span>
-            <input type="number" placeholder="Credit Card Number" asp-for="theuser.Card_number" id="psw-repeat" required>
-
+            <input type="number"  placeholder="Credit Card Number" asp-for="theuser.Card_number" id="psw-repeat" required>
             <label for="psw-repeat"><b>Card Expiry Date</b></label>
             <span asp-validation-for="theuser.Expiry_date" class="text-danger"></span>
             <input type="date" placeholder="" asp-for="theuser.Expiry_date" required>

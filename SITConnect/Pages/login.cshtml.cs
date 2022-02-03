@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -24,17 +25,18 @@ namespace SITConnect.Pages
         public string MyMessage { get; set; }
         [BindProperty]
         public User theuser { get; set; }
+        
         public void OnGet()
         {
         }
+        [ValidateAntiForgeryToken]
         public IActionResult OnPost()
         {
             if (ModelState.IsValid)
             {
                 if (_svc.Lockout(theuser.Email))
                 {
-                    
-
+              
                         if (_svc.Login(theuser))
                         {
                         User login_user = _svc.GetUserByEmail(theuser.Email);

@@ -21,9 +21,11 @@ namespace SITConnect.Models
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "It is not a valid email address")]
         public string Email { get; set; }
 
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$",
             ErrorMessage = "Password Need to be at least 12 characters, combination of lower case, upper case, numbers & special characters")]
         public string Password { get; set; }
+        [MinLength(16)]
         public string Card_number { get; set; }
         public string CVV { get; set; }
         [DataType(DataType.Date)]
@@ -40,7 +42,7 @@ namespace SITConnect.Models
         public string Photo { get; set; }
         public bool TwoFactorEnabled { get; set; }
         public DateTime LockoutEnd { get; set; }
-        public int AccessFailedCount { get; set; }
+        public int LoginFail { get; set; }
         public bool LockedoutEnabled { get; set; }
         public DateTime Password_Changed_Time { get; set; }
         public string Password1 { get; set; }

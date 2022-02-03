@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using SITConnect.Models;
+using SITConnect.Repository;
 using SITConnect.Services;
 using System;
 using System.Collections.Generic;
@@ -29,26 +31,29 @@ namespace SITConnect
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddRazorPages();
             services.AddDbContext<SITConnectDBcontext>();
+            services.AddHttpContextAccessor();
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(2);
+                options.IdleTimeout = TimeSpan.FromMinutes(1);
                 options.Cookie.HttpOnly = true;
             });
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(2);
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
                     options.SlidingExpiration = true;
-                    options.AccessDeniedPath = "/403";
+                    options.AccessDeniedPath = "/login";
                     options.LoginPath = "/login";
                     options.LogoutPath = "/logout";
                 });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            
             services.AddTransient<UserService>();
             services.AddReCaptcha(Configuration.GetSection("ReCaptcha"));
-
-
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,7 +75,7 @@ namespace SITConnect
                 await next();
                 if (context.Response.StatusCode == 404)
                 {
-                    context.Request.Path = "/404";
+                    context.Request.Path = "/notfound";
                     await next();
                 }
                 if(
@@ -84,6 +89,7 @@ namespace SITConnect
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseRouting();
+
           
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

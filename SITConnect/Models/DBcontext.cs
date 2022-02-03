@@ -23,5 +23,7 @@ namespace SITConnect.Models
         }
         public DbSet<User> Users { get; set; }
 
+        public DbSet<AuditModel> InsertAuditLogs { get; set; }
+
     }
 }

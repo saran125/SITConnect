@@ -36,7 +36,7 @@ namespace SITConnect.Pages
         public string Currentpwd { get; set; }
         public IActionResult OnGet()
         {
-            if (!String.IsNullOrEmpty(HttpContext.Session.GetString("AuthToken")))
+            if (!String.IsNullOrEmpty(HttpContext.Session.GetString("AuthToken")) && Request.Cookies["AuthToken"] != null)
                 {
                     user = _svc.GetUserByEmail(HttpContext.Session.GetString("Email"));
                 Myid = user.Id;
@@ -46,7 +46,7 @@ namespace SITConnect.Pages
                 }
             else
                 {
-                    return Redirect("/403");
+                    return Redirect("/forbidden");
                 }
             
             

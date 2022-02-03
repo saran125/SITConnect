@@ -40,7 +40,7 @@ namespace SITConnect.Pages
         public IActionResult OnGet(string Id)
         { if (Id == null)
             {
-                return Redirect("/404");
+                return Redirect("/forbidden");
             }
             else
             {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Google.Authenticator;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using SITConnect.Models;
+using SITConnect.Repository;
 using SITConnect.Services;
 
 namespace SITConnect.Pages
@@ -16,12 +18,15 @@ namespace SITConnect.Pages
     {
         private readonly ILogger<TwoFactorModel> _logger;
         private UserService _svc;
+       
+       
         public TwoFactorModel(ILogger<TwoFactorModel> logger, UserService service)
         {
             _logger = logger;
             _svc = service;
+      
 
-        }
+    }
         [BindProperty]
         public User user { get; set; }
         [BindProperty]
@@ -36,12 +41,13 @@ namespace SITConnect.Pages
         {
             return $"myverysecretkey+{user.Email}";
         }
+        
         public IActionResult OnGet()
 
         {
-            if (String.IsNullOrEmpty(HttpContext.Session.GetString("Id")))
+            if (String.IsNullOrEmpty(HttpContext.Session.GetString("Id")) )
             {
-                return Redirect("/403");
+                return Redirect("/forbidden");
             }
             else
             Myid = HttpContext.Session.GetString("Id");
@@ -58,13 +64,14 @@ namespace SITConnect.Pages
                 string guid = Guid.NewGuid().ToString();
                 HttpContext.Session.SetString("AuthToken", guid);
                 CookieOptions option = new CookieOptions();
-                option.Expires = DateTime.Now.AddMinutes(10);
+                option.Expires = DateTime.Now.AddMinutes(1);
                 Response.Cookies.Append("AuthToken", guid, option);
                 HttpContext.Session.SetString("Email", currentuser.Email);
                 
                 if (_svc.Max_password(currentuser.Email))
                 {
                     HttpContext.Session.SetString("Role", currentuser.Role);
+                   
                     if (currentuser.Role == "Student")
                     { return RedirectToPage("/Student"); }
                     else if (currentuser.Role == "Staff")
@@ -81,9 +88,9 @@ namespace SITConnect.Pages
                 }
             else
             {
-                var setupInfo = twoFactor.GenerateSetupCode("SITConnect", user.Email, TwoFactorKey(user), false, 3);
+                var setupInfo = twoFactor.GenerateSetupCode("SITConnect", currentuser.Email, TwoFactorKey(currentuser), false, 3);
                 Mymessage = "Invalid Code";
-                Myid = user.Id;
+                Myid = currentuser.Id;
                 return Page();
             }
             return Page();

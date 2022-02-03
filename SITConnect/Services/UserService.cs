@@ -51,12 +51,11 @@ namespace SITConnect.Services
                     newuser.Password2 = password;
                     //Encrypt
                     byte[] plainText = Encoding.UTF8.GetBytes(newuser.Card_number);
-                    Aes cipher = Aes.Create();
+                    RijndaelManaged cipher = new RijndaelManaged();
                     cipher.Padding = PaddingMode.Zeros;
                     newuser.Key = cipher.Key;
                     newuser.IV = cipher.IV;
                     ICryptoTransform encryptTransform = cipher.CreateEncryptor();
-
                     byte[] cipherText = encryptTransform.TransformFinalBlock(plainText, 0, plainText.Length);
                     string cipherString = Convert.ToBase64String(cipherText);
                     newuser.Card_number = cipherString;
@@ -93,43 +92,41 @@ namespace SITConnect.Services
         }
         public bool Login(User existuser)
         {
-            try
-            {
-                existuser.Email.ToLower();
-                if (UserExists(existuser.Email) == false)
-                {
-                    return false; 
-                }
-                else {
-                  //  return true;
-                   
-                    User account = GetUserByEmail(existuser.Email);
-                    if (BC.Verify(existuser.Password, account.Password))
-                    {
-                        return true;
-                    }
-                    else
-                    {
 
-                        account.AccessFailedCount += 1;
-                        if( account.AccessFailedCount >= 3){
-                            account.LockedoutEnabled = true;
-                            account.LockoutEnd = DateTime.Now;
-                        }
-                        _context.Attach(account).State = EntityState.Modified;
-                            _context.Update(account);
-                            _context.SaveChanges();
-                            return false;
-                    }
-                }
-            }
-            catch (DbUpdateConcurrencyException)
+            if (UserExists(existuser.Email) == false)
             {
-                
                 return false;
-                throw;
-
             }
+
+            else
+            {
+
+                User account = GetUserByEmail(existuser.Email);
+                if (BC.Verify(existuser.Password, account.Password))
+                {
+                  
+                    return true;
+                }
+                else 
+                {
+
+                    account.LoginFail += 1;
+                    if (account.LoginFail >= 3)
+                    {
+                        account.LoginFail = 0;
+                        account.LockedoutEnabled = true;
+                        account.LockoutEnd = DateTime.Now;
+                    }
+                    _context.Attach(account).State = EntityState.Modified;
+                    _context.Update(account);
+                    _context.SaveChanges();
+                    return false;
+                }
+                
+            }
+               
+            
+           
             
             
         }
@@ -141,17 +138,17 @@ namespace SITConnect.Services
             {
                 User user = GetUserByEmail(email);
                 var time = (DateTime.Now - user.LockoutEnd).Minutes;
-                if (time > 1 || user.LockedoutEnabled == false)
+                if (time >= 1 || user.LockedoutEnabled == false )
                 {
-                    return true;
+                        user.LockedoutEnabled = false;
+                        _context.Attach(user).State = EntityState.Modified;
+                        _context.Update(user);
+                        _context.SaveChanges();
+                        return true;
                 }
                 else
                 {
-                    user.AccessFailedCount = 0;
-                    user.LockedoutEnabled = false;
-                    _context.Attach(user).State = EntityState.Modified;
-                    _context.Update(user);
-                    _context.SaveChanges();
+         
                     return false;
                 }
             }
@@ -207,7 +204,7 @@ namespace SITConnect.Services
             {
                 
                 var time = (DateTime.Now - user.Password_Changed_Time).Minutes;
-                if (time >= 1)
+                if (time >= 3)
                 {
                     return true;
                 }
@@ -225,7 +222,7 @@ namespace SITConnect.Services
             {
                 User user = GetUserByEmail(email);
                 var time = (DateTime.Now - user.Password_Changed_Time).Minutes;
-                if (time > 3)
+                if (time > 120)
                 {
                     return false;
                 }
@@ -285,14 +282,16 @@ namespace SITConnect.Services
         public string Decrypt(string Text, byte[] Key, byte[] IV)
         {
             byte[] cipherText = Convert.FromBase64String(Text);
-            Aes cipher = Aes.Create();
+            RijndaelManaged cipher = new RijndaelManaged();
             cipher.Key = Key;
             cipher.IV = IV;
             cipher.Padding = PaddingMode.Zeros;
             ICryptoTransform decryptTransform = cipher.CreateDecryptor();
             byte[] decryptedText = decryptTransform.TransformFinalBlock(cipherText, 0, cipherText.Length);
             string decryptedString = Encoding.UTF8.GetString(decryptedText);
+            decryptedString.ToArray();
             return decryptedString;
+
         }
         public User Theuser(User existuser)
         {
