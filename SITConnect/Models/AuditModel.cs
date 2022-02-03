@@ -11,17 +11,17 @@ namespace SITConnect.Models
     {
 
         public string Id { get; set; }
-        public string Area { get; set; }
+        public string Action { get; set; }
         public string ControllerName { get; set; }
         public string ActionName { get; set; }
-        public string role { get; set; }
+        public string Role { get; set; }
         public string IpAddress { get; set; }
         public string LoggedInAt { get; set; }
         public string LoggedOutAt { get; set; }
         public string LoginStatus { get; set; }
         public string PageAccessed { get; set; }
         public string SessionId { get; set; }
-        public string UrlReferrer { get; set; }
+
         public string UserId { get; set; }
     }
 
